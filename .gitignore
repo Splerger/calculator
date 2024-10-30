@@ -1,0 +1,24 @@
+# PyInstaller
+# ------------
+# Usually these files are not included in version control.
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+__pycache__/
+*.so
+*.dll
+*.dylib
+
+# PyInstaller
+# ------------
+# Usually these files are not included in version control, as they are built on demand.
+
+# If you are using PyInstaller to generate .spec files
+*.spec
+
+# Output directory for PyInstaller
+dist/
+build/
+
+# Installer logs
+*.log

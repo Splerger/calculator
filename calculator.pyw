@@ -1,6 +1,9 @@
-#import tkinter
+#import modules
 import tkinter as tk
 from tkinter import messagebox
+
+import os
+import sys
 
 #define width and height for window
 width = 250
@@ -14,7 +17,14 @@ window.maxsize(width,height)
 window.title("Calculator")
 
 #set window icon
-window.iconbitmap("icon.ico")
+if getattr(sys, 'frozen', False):  # Check if running in a PyInstaller bundle
+    # Use the temporary directory created by PyInstaller
+    icon_path = os.path.join(sys._MEIPASS, 'icon.ico')
+else:
+    # Use the regular path for development
+    icon_path = 'icon.ico'
+
+window.iconbitmap(icon_path)
 
 #global variables
 numberString1 = "0"
@@ -69,8 +79,6 @@ def equal():
     global mode
     
     if mode == "": 
-        return
-    if numberString1 == "" or numberString2 == "": 
         return
     
     match mode:
