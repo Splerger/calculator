@@ -13,6 +13,9 @@ window.minsize(width,height)
 window.maxsize(width,height)
 window.title("Calculator")
 
+#set window icon
+window.iconbitmap("icon.ico")
+
 #global variables
 numberString1 = "0"
 numberString2 = ""
@@ -55,6 +58,7 @@ def addNumber(number):
 def setMode(newMode):
     global mode
     mode = newMode
+    label.config(text=f"{numberString1}{mode}{numberString2}")
     
 
 #define equal function
@@ -159,6 +163,8 @@ def keyHandler(event):
             equal()
         case "\r":
             equal()
+        case "c":
+            clear()
         case _:
             return
 
@@ -230,4 +236,3 @@ multiplyButton.place(x=fourthCol, y=fourthRow)
 divideButton.place(x=fourthCol, y=fithRow)
 
 tk.mainloop()
-
