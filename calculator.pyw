@@ -70,7 +70,7 @@ def equal():
     
     if mode == "": 
         return
-    if numberString1 == "0" or numberString2 == "": 
+    if numberString1 == "" or numberString2 == "": 
         return
     
     match mode:
