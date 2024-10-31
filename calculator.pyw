@@ -13,7 +13,6 @@ height = 375
 window = tk.Tk()
 window.geometry(f"{width}x{height}")
 window.minsize(width,height)
-window.maxsize(width,height)
 window.title("Calculator")
 
 #set window icon
@@ -28,7 +27,7 @@ window.iconbitmap(icon_path)
 
 #global variables
 numberString1 = "0"
-numberString2 = ""
+numberString2 = "0"
 result = 0
 mode = ""
 
