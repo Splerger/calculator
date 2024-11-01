@@ -139,14 +139,12 @@ def keyHandler(event):
     match event.char:
         case "1" | "2" | "3" | "4" | "4" | "5" | "6" | "7" | "8" | "9" | "0":
             addNumber(int(event.char))
-        case ".":
-            addNumber(".")
         case "+" | "-" | "*" | "/":
             setMode(event.char)
-        case "=":
+        case "\r" | "=":
             equal()
-        case "\r":
-            equal()
+        case ".":
+            addNumber(".")
         case "c":
             clear()
         case _:
