@@ -79,6 +79,9 @@ def equal():
     
     if mode == "": 
         return
+
+    if numberString1 == "" or numberString2 == "":
+        return
     
     match mode:
         case "+":
@@ -96,7 +99,7 @@ def equal():
         result = int(result)
         
     if len(str(result)) > 10:
-        label.config(text=f"{numberString1}{mode}{numberString2} = {format(result, '.2e')}")
+        label.config(text=f"{format(result, '.2e')}")
     else:
         label.config(text=f"{numberString1}{mode}{numberString2} = {result}")
 
@@ -105,7 +108,7 @@ def clear():
     global numberString1
     global numberString2
     global mode
-    numberString1 = "0"
+    numberString1 = ""
     numberString2 = ""
     mode = ""
     label.config(text=f"{numberString1}{mode}")
@@ -125,8 +128,6 @@ def removeOne():
     global mode
     if mode == "":
         numberString1 = numberString1[:-1]
-        if numberString1 == "":
-            numberString1 = "0"
         label.config(text=f"{numberString1}{mode}")
     else:
         numberString2 = numberString2[:-1]
@@ -140,14 +141,8 @@ def keyHandler(event):
             addNumber(int(event.char))
         case ".":
             addNumber(".")
-        case "+":
-            setMode("+")
-        case "-":
-            setMode("-")
-        case "*":
-            setMode("*")
-        case "/":
-            setMode("/")
+        case "+" | "-" | "*" | "/":
+            setMode(event.char)
         case "=":
             equal()
         case "\r":
