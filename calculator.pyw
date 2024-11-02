@@ -29,6 +29,7 @@ window.iconbitmap(icon_path)
 numberString1 = ""
 numberString2 = ""
 result = 0
+calculated = False
 mode = ""
 
 #label to display numbers
@@ -40,6 +41,11 @@ def addNumber(number):
     global numberString1
     global numberString2
     global mode
+    global calculated
+
+    if calculated:
+        clear()
+        calculated = False
     
     if mode == "":
         if numberString1 == "" and number != ".":
@@ -76,6 +82,9 @@ def equal():
     global numberString2
     global result
     global mode
+    global calculated
+    
+    calculated = True
     
     if mode == "": 
         return
@@ -192,6 +201,7 @@ subtractButton = tk.Button(window, text="-", width = 5, height = 3, command = la
 multiplyButton = tk.Button(window, text="*", width = 5, height = 3, command = lambda: setMode("*"))
 divideButton = tk.Button(window, text="/", width = 5, height = 3, command = lambda: setMode("/"))
 
+#place buttons
 clearButton.place(x=firstCol, y=firstRow)
 clearMostButton.place(x=secondCol, y=firstRow)
 removeOneButton.place(x=thirdCol, y=firstRow)
