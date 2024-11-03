@@ -16,11 +16,11 @@ window.minsize(width,height)
 window.title("Calculator")
 
 #set window icon
-if getattr(sys, 'frozen', False):  # Check if running in a PyInstaller bundle
-    # Use the temporary directory created by PyInstaller
+if getattr(sys, 'frozen', False):  #Check if running in a PyInstaller bundle
+    #Use the temporary directory created by PyInstaller
     icon_path = os.path.join(sys._MEIPASS, 'icon.ico')
 else:
-    # Use the regular path for development
+    #Use the regular path for development
     icon_path = 'icon.ico'
 
 window.iconbitmap(icon_path)
@@ -159,7 +159,12 @@ def keyHandler(event):
         case _:
             return
 
+def close(event):
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        window.destroy()
+
 window.bind("<BackSpace>", lambda _: removeOne())
+window.bind("<Escape>", close)
 window.bind("<Key>", keyHandler)
 
 #define row positions
