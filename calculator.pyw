@@ -2,6 +2,8 @@
 import tkinter as tk
 from tkinter import messagebox
 
+from playsound import playsound
+
 import os
 import sys
 
@@ -167,6 +169,9 @@ def keyHandler(event):
 def close():
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         window.destroy()
+
+def click():
+    playsound("click.mp3")
 
 window.bind("<BackSpace>", lambda _: removeOne())
 window.bind("<Escape>", lambda _: close())
