@@ -7,7 +7,7 @@ import sys
 
 #define width and height for window
 width = 250
-height = 375
+height = 380
 
 #create window
 window = tk.Tk()
@@ -42,6 +42,11 @@ def addNumber(number):
     global numberString2
     global mode
     global calculated
+    
+    fullString = f"{numberString1}{mode}{numberString2}"
+    
+    if len(fullString) > 30:
+        return
 
     if calculated:
         clear()
@@ -159,20 +164,20 @@ def keyHandler(event):
         case _:
             return
 
-def close(event):
+def close():
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         window.destroy()
 
 window.bind("<BackSpace>", lambda _: removeOne())
-window.bind("<Escape>", close)
+window.bind("<Escape>", lambda _: close())
 window.bind("<Key>", keyHandler)
 
 #define row positions
-firstRow = 75
-secondRow = 135
-thirdRow = 195
-fourthRow = 255
-fithRow = 315
+firstRow = 80
+secondRow = 140
+thirdRow = 200
+fourthRow = 260
+fithRow = 320
 
 #define collum positions
 firstCol = 20
