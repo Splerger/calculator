@@ -7,7 +7,7 @@ import sys
 
 #define width and height for window
 width = 250
-height = 380
+height = 375
 
 #create window
 window = tk.Tk()
@@ -42,11 +42,6 @@ def addNumber(number):
     global numberString2
     global mode
     global calculated
-    
-    fullString = f"{numberString1}{mode}{numberString2}"
-    
-    if len(fullString) > 30:
-        return
 
     if calculated:
         clear()
@@ -73,7 +68,14 @@ def addNumber(number):
                 numberString2 += str(number)
                 label.config(text=f"{numberString1}{mode}{numberString2}")
 
+def addAnswer():
+    global numberString1
+    global numberString2
+    global mode
+    global result
 
+    addNumber(result)
+    
 #define setMode function
 def setMode(newMode):
     global mode
@@ -164,20 +166,20 @@ def keyHandler(event):
         case _:
             return
 
-def close():
+def close(event):
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         window.destroy()
 
 window.bind("<BackSpace>", lambda _: removeOne())
-window.bind("<Escape>", lambda _: close())
+window.bind("<Escape>", close)
 window.bind("<Key>", keyHandler)
 
 #define row positions
-firstRow = 80
-secondRow = 140
-thirdRow = 200
-fourthRow = 260
-fithRow = 320
+firstRow = 75
+secondRow = 135
+thirdRow = 195
+fourthRow = 255
+fithRow = 315
 
 #define collum positions
 firstCol = 20
@@ -188,6 +190,7 @@ fourthCol = 170
 #define buttons
 clearButton = tk.Button(window, text="C", width = 5, height = 3, command = lambda: clear())
 clearMostButton = tk.Button(window, text="CE", width = 5, height = 3, command = lambda: clearMost())
+answerButton = tk.Button(window, text="Ans", width = 5, height = 3, command = lambda: addAnswer())
 removeOneButton = tk.Button(window, text="⌫", width = 5, height = 3, command = lambda: removeOne())
 
 oneButton = tk.Button(window, text="1", width = 5, height = 3, command = lambda: addNumber(1))
@@ -214,27 +217,27 @@ divideButton = tk.Button(window, text="/", width = 5, height = 3, command = lamb
 #place buttons
 clearButton.place(x=firstCol, y=firstRow)
 clearMostButton.place(x=secondCol, y=firstRow)
-removeOneButton.place(x=thirdCol, y=firstRow)
+answerButton.place(x=thirdCol, y=firstRow)
+removeOneButton.place(x=fourthCol, y=firstRow)
 
 oneButton.place(x=firstCol, y=secondRow)
 twoButton.place(x=secondCol, y=secondRow)
 threeButton.place(x=thirdCol, y=secondRow)
+addButton.place(x=fourthCol, y=secondRow)
 
 fourButton.place(x=firstCol, y=thirdRow)
 fiveButton.place(x=secondCol, y=thirdRow)
 sixButton.place(x=thirdCol, y=thirdRow)
+subtractButton.place(x=fourthCol, y=thirdRow)
 
 sevenButton.place(x=firstCol, y=fourthRow)
 eightButton.place(x=secondCol, y=fourthRow)
 nineButton.place(x=thirdCol, y=fourthRow)
+multiplyButton.place(x=fourthCol, y=fourthRow)
 
 zeroButton.place(x=secondCol, y=fithRow)
-decimalButton.place(x=thirdCol, y=fithRow)
-equalButton.place(x=firstCol, y=fithRow)
-
-addButton.place(x=fourthCol, y=secondRow)
-subtractButton.place(x=fourthCol, y=thirdRow)
-multiplyButton.place(x=fourthCol, y=fourthRow)
+decimalButton.place(x=firstCol, y=fithRow)
+equalButton.place(x=thirdCol, y=fithRow)
 divideButton.place(x=fourthCol, y=fithRow)
 
 tk.mainloop()
