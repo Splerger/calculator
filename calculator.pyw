@@ -43,38 +43,51 @@ def addNumber(number):
     global mode
     global calculated
 
+    #check if calculated is True
     if calculated:
+        #clear results and set calculated to False
         clear()
         calculated = False
-    
+
+    #check if the mode isn't defined yet to determine what field you are trying to type in
     if mode == "":
+        #if the first thing is empty and the input is a .
         if numberString1 == "" and number != ".":
+            #replace numberString1 with the next inputted number
             numberString1 = str(number)
             label.config(text=f"{numberString1}{mode}")
         else:
+            #if the last char of numberString1 is . and the next inputted number is also a . do nothing
             if numberString1[-1] == "." and number == ".":
                 return
             else:
                 numberString1 += str(number)
                 label.config(text=f"{numberString1}{mode}")
     else:
+        #if numberString2 is empty and the inputted number is a . 
         if numberString2 == "" and number != ".":
+            #replace numberString2 with the next inputted number
             numberString2 = str(number)
             label.config(text=f"{numberString1}{mode}{numberString2}")
         else:
+            #if the last char of numberString2 is . and the next inputted number is also a . do nothing
             if numberString2[-1] == "." and number == ".":
                 return
             else:
                 numberString2 += str(number)
                 label.config(text=f"{numberString1}{mode}{numberString2}")
 
+#define addAnswer function
 def addAnswer():
     global numberString1
     global numberString2
     global mode
     global result
 
-    addNumber(result)
+    #check if result is zero
+    if result != 0:
+        addNumber(result)
+        
     
 #define setMode function
 def setMode(newMode):
@@ -90,30 +103,37 @@ def equal():
     global result
     global mode
     global calculated
-    
-    calculated = True
-    
+
+    #check if the mode is nothing
     if mode == "": 
         return
 
+    #check if either of the input strings are nothing
     if numberString1 == "" or numberString2 == "":
         return
-    
+
+    #determine the correct mathematical operation depending on the mode variable 
     match mode:
         case "+":
             result = float(numberString1) + float(numberString2)
+            calculated = True
         case "-":
             result = float(numberString1) - float(numberString2)
+            calculated = True
         case "*":
             result = float(numberString1) * float(numberString2)
+            calculated = True
         case "/":
             result = float(numberString1) / float(numberString2)
+            calculated = True
         case _:
             return
-        
+
+    #remove extra .0 at end of result
     if result.is_integer():
         result = int(result)
-        
+
+    #if result is longer than 10 characters format to scientific notation
     if len(str(result)) > 10:
         label.config(text=f"{format(result, '.2e')}")
     else:
@@ -142,15 +162,20 @@ def removeOne():
     global numberString1
     global numberString2
     global mode
+    #check if mode is empty
     if mode == "":
+        #remove last character of numberString1
         numberString1 = numberString1[:-1]
         label.config(text=f"{numberString1}{mode}")
     else:
+        #remove last character of numberString2
         numberString2 = numberString2[:-1]
+        #if numberString2 is empty reset mode 
         if numberString2 == "":
             mode = ""
         label.config(text=f"{numberString1}{mode}{numberString2}")
 
+#define keyHandler function
 def keyHandler(event):
     match event.char:
         case "1" | "2" | "3" | "4" | "4" | "5" | "6" | "7" | "8" | "9" | "0":
@@ -166,10 +191,13 @@ def keyHandler(event):
         case _:
             return
 
+#define close function
 def close(event):
+    #ask user if they want to quit
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
         window.destroy()
 
+#setup keybinds
 window.bind("<BackSpace>", lambda _: removeOne())
 window.bind("<Escape>", close)
 window.bind("<Key>", keyHandler)
@@ -240,4 +268,5 @@ decimalButton.place(x=firstCol, y=fithRow)
 equalButton.place(x=thirdCol, y=fithRow)
 divideButton.place(x=fourthCol, y=fithRow)
 
+#start main loop
 tk.mainloop()
