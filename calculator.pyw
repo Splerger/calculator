@@ -5,6 +5,31 @@ from tkinter import messagebox
 import os
 import sys
 
+import logging
+from datetime import date
+
+#define logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+today = date.today()
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setFormatter(formatter)
+
+#check if path exists
+if not os.path.exists(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator"):
+    #make directory if not
+    os.mkdir(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator")
+
+file_handler = logging.FileHandler(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}.log")
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+logger.addHandler(stdout_handler)
+
+logger.info("-------------------------------------")
+logger.info("Logging started")
+
 #define width and height for window
 width = 250
 height = 375
@@ -43,12 +68,15 @@ def addNumber(number):
     global mode
     global calculated
 
-    #check if calculated is True
+    logger.info(f"Adding number: {number}")
+    
+    #check if calculated is true
     if calculated:
-        #clear results and set calculated to False
+        #clear results and set calculated to false
+        logger.info("Clearing previous result")
         clear()
         calculated = False
-
+        
     #check if the mode isn't defined yet to determine what field you are trying to type in
     if mode == "":
         #if the first thing is empty and the input is a .
@@ -56,26 +84,32 @@ def addNumber(number):
             #replace numberString1 with the next inputted number
             numberString1 = str(number)
             label.config(text=f"{numberString1}{mode}")
+            logger.info(f"Updated numberString1: {numberString1}")
         else:
             #if the last char of numberString1 is . and the next inputted number is also a . do nothing
             if numberString1[-1] == "." and number == ".":
+                logger.warning("Attempted to add consecutive decimals")
                 return
             else:
                 numberString1 += str(number)
                 label.config(text=f"{numberString1}{mode}")
+                logger.info(f"Updated numberString1: {numberString1}")
     else:
         #if numberString2 is empty and the inputted number is a . 
         if numberString2 == "" and number != ".":
             #replace numberString2 with the next inputted number
             numberString2 = str(number)
             label.config(text=f"{numberString1}{mode}{numberString2}")
+            logger.info(f"Updated numberString2: {numberString2}")
         else:
             #if the last char of numberString2 is . and the next inputted number is also a . do nothing
             if numberString2[-1] == "." and number == ".":
+                logger.warning("Attempted to add consecutive decimals")
                 return
             else:
                 numberString2 += str(number)
                 label.config(text=f"{numberString1}{mode}{numberString2}")
+                logger.info(f"Updated numberString2: {numberString2}")
 
 #define addAnswer function
 def addAnswer():
@@ -84,17 +118,15 @@ def addAnswer():
     global mode
     global result
 
-    #check if result is zero
-    if result != 0:
-        addNumber(result)
-        
-    
+    logger.info(f"Adding answer: {result}")
+    addNumber(result)
+
 #define setMode function
 def setMode(newMode):
     global mode
     mode = newMode
     label.config(text=f"{numberString1}{mode}{numberString2}")
-    
+    logger.info(f"Set mode to: {mode}")
 
 #define equal function
 def equal():
@@ -103,16 +135,20 @@ def equal():
     global result
     global mode
     global calculated
-
-    #check if the mode is nothing
-    if mode == "": 
+    
+    logger.info("Calculating result")
+    
+    #check if mode is defined
+    if mode == "":
+        logger.warning("No operation mode set")
         return
 
-    #check if either of the input strings are nothing
+    #check if both numberString1 and numberString2 are defined
     if numberString1 == "" or numberString2 == "":
+        logger.warning("Missing numbers for calculation")
         return
-
-    #determine the correct mathematical operation depending on the mode variable 
+    
+    #determine the correct mathematical operation depending on the mode variable
     match mode:
         case "+":
             result = float(numberString1) + float(numberString2)
@@ -127,53 +163,57 @@ def equal():
             result = float(numberString1) / float(numberString2)
             calculated = True
         case _:
+            logger.error("Unknown operation mode")
             return
-
+        
     #remove extra .0 at end of result
     if result.is_integer():
         result = int(result)
-
+    
     #if result is longer than 10 characters format to scientific notation
     if len(str(result)) > 10:
         label.config(text=f"{format(result, '.2e')}")
+        logger.info(f"Result formatted in scientific notation: {format(result, '.2e')}")
     else:
         label.config(text=f"{numberString1}{mode}{numberString2} = {result}")
+        logger.info(f"Result: {numberString1}{mode}{numberString2} = {result}")
 
 #define clear function
 def clear():
     global numberString1
     global numberString2
     global mode
+    logger.info("Clearing all inputs")
     numberString1 = ""
     numberString2 = ""
     mode = ""
     label.config(text=f"{numberString1}{mode}")
-    
+
 #define clearMost function
 def clearMost():
     global numberString1
     global numberString2
     global mode
+    logger.info("Clearing most recent entry")
     numberString2 = ""
     label.config(text=f"{numberString1}{mode}")
-    
+
 #define removeOne function
 def removeOne():
     global numberString1
     global numberString2
     global mode
-    #check if mode is empty
+    logger.info("Removing last character")
     if mode == "":
-        #remove last character of numberString1
         numberString1 = numberString1[:-1]
         label.config(text=f"{numberString1}{mode}")
+        logger.info(f"Updated numberString1: {numberString1}")
     else:
-        #remove last character of numberString2
         numberString2 = numberString2[:-1]
-        #if numberString2 is empty reset mode 
         if numberString2 == "":
             mode = ""
         label.config(text=f"{numberString1}{mode}{numberString2}")
+        logger.info(f"Updated numberString2: {numberString2}")
 
 #define keyHandler function
 def keyHandler(event):
@@ -188,19 +228,25 @@ def keyHandler(event):
             addNumber(".")
         case "c":
             clear()
+        case "a":
+            addAnswer()
         case _:
             return
 
 #define close function
 def close(event):
-    #ask user if they want to quit
     if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        logger.info("Window closed")
         window.destroy()
+        
+logger.info("Binding keys")
+#define key bindings
 
-#setup keybinds
 window.bind("<BackSpace>", lambda _: removeOne())
 window.bind("<Escape>", close)
+window.bind("<Destroy>", lambda _: close)
 window.bind("<Key>", keyHandler)
+window.protocol("WM_DELETE_WINDOW", close)
 
 #define row positions
 firstRow = 75
@@ -242,6 +288,8 @@ subtractButton = tk.Button(window, text="-", width = 5, height = 3, command = la
 multiplyButton = tk.Button(window, text="*", width = 5, height = 3, command = lambda: setMode("*"))
 divideButton = tk.Button(window, text="/", width = 5, height = 3, command = lambda: setMode("/"))
 
+logger.info("Placing buttons")
+
 #place buttons
 clearButton.place(x=firstCol, y=firstRow)
 clearMostButton.place(x=secondCol, y=firstRow)
@@ -268,5 +316,4 @@ decimalButton.place(x=firstCol, y=fithRow)
 equalButton.place(x=thirdCol, y=fithRow)
 divideButton.place(x=fourthCol, y=fithRow)
 
-#start main loop
 tk.mainloop()
