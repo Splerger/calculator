@@ -1,9 +1,12 @@
 #import modules
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import Menu
 
 import os
 import sys
+
+import subprocess
+import webbrowser
 
 import logging
 from datetime import date
@@ -57,9 +60,47 @@ result = 0
 calculated = False
 mode = ""
 
+version = "1.0.0"
+
 #label to display numbers
 label = tk.Label(window, text=f"{numberString1}{mode}")
 label.place(x=20, y=20)
+
+menubar = Menu(window)
+filemenu = Menu(menubar, tearoff=0)
+helpmenu = Menu(menubar, tearoff=0)
+
+#define openLogFile
+def openLogFile():
+    subprocess.Popen(["notepad.exe", f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}.log"])
+
+filemenu.add_command(label="Open Log File", command=openLogFile)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=window.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+
+#define about function
+def about():
+    aboutWindow = tk.Tk()
+    aboutWindow.title("About")
+    aboutWindow.geometry("380x150")
+    aboutWindow.minsize(380, 150)
+    aboutWindow.maxsize(380, 150)
+    aboutWindow.iconbitmap(icon_path)
+
+    Name = tk.Label(aboutWindow, text=f"Calculator V{version}", font=('Helvetica', 9, 'bold'), justify='left')
+    Source = tk.Label(aboutWindow, text="https://github.com/splerger/Calculator", font=('Helvetica', 9, 'underline'), fg='blue', cursor='hand2', justify='left')
+    Source.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/splerger/Calculator"))
+
+    Author = tk.Label(aboutWindow, text="https://github.com/Splerger/calculator/graphs/contributors", font=('Helvetica', 9, 'underline'), fg='blue', cursor='hand2', justify='left')
+    Author.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/Splerger/calculator/graphs/contributors"))
+
+    Name.pack(anchor='w')
+    Source.pack(anchor='w')
+    Author.pack(anchor='w')
+
+menubar.add_cascade(label="Help", menu=helpmenu)
+helpmenu.add_command(label="About", command=lambda: about())
 
 #define addNumber function
 def addNumber(number):
@@ -232,21 +273,12 @@ def keyHandler(event):
             addAnswer()
         case _:
             return
-
-#define close function
-def close(event):
-    if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        logger.info("Window closed")
-        window.destroy()
         
 logger.info("Binding keys")
 #define key bindings
 
-window.bind("<BackSpace>", lambda _: removeOne())
-window.bind("<Escape>", close)
-window.bind("<Destroy>", lambda _: close)
+window.bind("<BackSpace>", lambda event: removeOne())
 window.bind("<Key>", keyHandler)
-window.protocol("WM_DELETE_WINDOW", close)
 
 #define row positions
 firstRow = 75
@@ -316,4 +348,5 @@ decimalButton.place(x=firstCol, y=fithRow)
 equalButton.place(x=thirdCol, y=fithRow)
 divideButton.place(x=fourthCol, y=fithRow)
 
-tk.mainloop()
+window.config(menu=menubar)
+window.mainloop()
