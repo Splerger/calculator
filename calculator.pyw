@@ -60,7 +60,7 @@ result = 0
 calculated = False
 mode = ""
 
-version = "1.0.0"
+version = "1.0.1"
 
 #label to display numbers
 label = tk.Label(window, text=f"{numberString1}{mode}")
@@ -89,6 +89,8 @@ def about():
     aboutWindow.iconbitmap(icon_path)
 
     Name = tk.Label(aboutWindow, text=f"Calculator V{version}", font=('Helvetica', 9, 'bold'), justify='left')
+    
+    
     Source = tk.Label(aboutWindow, text="https://github.com/splerger/Calculator", font=('Helvetica', 9, 'underline'), fg='blue', cursor='hand2', justify='left')
     Source.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/splerger/Calculator"))
 
@@ -96,7 +98,10 @@ def about():
     Author.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/Splerger/calculator/graphs/contributors"))
 
     Name.pack(anchor='w')
+    tk.Label(aboutWindow, text="---------------------------", font=('Helvetica', 9), justify='left').pack(anchor='w')
+    tk.Label(aboutWindow, text="Source:", font=('Helvetica', 9, 'bold'), justify='left').pack(anchor='w')
     Source.pack(anchor='w')
+    tk.Label(aboutWindow, text="Contributors:", font=('Helvetica', 9, 'bold'), justify='left').pack(anchor='w')
     Author.pack(anchor='w')
 
 menubar.add_cascade(label="Help", menu=helpmenu)
