@@ -83,9 +83,9 @@ menubar.add_cascade(label="File", menu=filemenu)
 def about():
     aboutWindow = tk.Tk()
     aboutWindow.title("About")
-    aboutWindow.geometry("380x150")
-    aboutWindow.minsize(380, 150)
-    aboutWindow.maxsize(380, 150)
+    aboutWindow.geometry("380x160")
+    aboutWindow.minsize(380, 160)
+    aboutWindow.maxsize(380, 160)
     aboutWindow.iconbitmap(icon_path)
 
     Name = tk.Label(aboutWindow, text=f"Calculator V{version}", font=('Helvetica', 9, 'bold'), justify='left')
@@ -103,6 +103,8 @@ def about():
     Source.pack(anchor='w')
     tk.Label(aboutWindow, text="Contributors:", font=('Helvetica', 9, 'bold'), justify='left').pack(anchor='w')
     Author.pack(anchor='w')
+    
+    tk.Button(aboutWindow, text="exit", width=5, height=1, command=aboutWindow.destroy).pack(side='bottom')
 
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About", command=lambda: about())
