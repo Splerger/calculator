@@ -15,7 +15,7 @@ from datetime import date
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
-today = date.today()
+today = date.today().strftime('%d-%m-%y')
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setFormatter(formatter)
 
@@ -23,6 +23,18 @@ stdout_handler.setFormatter(formatter)
 if not os.path.exists(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator"):
     #make directory if not
     os.mkdir(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator")
+
+files = []
+
+#get list of files in log directory
+for (dirpath, dirnames, filenames) in os.walk(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator"):
+    files.extend(filenames)
+    break
+
+#if file is over 1 mb then delete it
+for file in files:    
+    if os.path.getsize(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/{file}") >= 1000000:
+        os.remove(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/{file}")
 
 file_handler = logging.FileHandler(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}.log")
 file_handler.setFormatter(formatter)
@@ -60,7 +72,7 @@ result = 0
 calculated = False
 mode = ""
 
-version = "1.0.1"
+version = "1.0.2"
 
 #label to display numbers
 label = tk.Label(window, text=f"{numberString1}{mode}")
@@ -83,13 +95,12 @@ menubar.add_cascade(label="File", menu=filemenu)
 def about():
     aboutWindow = tk.Tk()
     aboutWindow.title("About")
-    aboutWindow.geometry("380x160")
-    aboutWindow.minsize(380, 160)
-    aboutWindow.maxsize(380, 160)
+    aboutWindow.geometry("380x170")
+    aboutWindow.minsize(380, 150)
+    aboutWindow.maxsize(380, 150)
     aboutWindow.iconbitmap(icon_path)
 
     Name = tk.Label(aboutWindow, text=f"Calculator V{version}", font=('Helvetica', 9, 'bold'), justify='left')
-    
     
     Source = tk.Label(aboutWindow, text="https://github.com/splerger/Calculator", font=('Helvetica', 9, 'underline'), fg='blue', cursor='hand2', justify='left')
     Source.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/splerger/Calculator"))
@@ -103,8 +114,6 @@ def about():
     Source.pack(anchor='w')
     tk.Label(aboutWindow, text="Contributors:", font=('Helvetica', 9, 'bold'), justify='left').pack(anchor='w')
     Author.pack(anchor='w')
-    
-    tk.Button(aboutWindow, text="exit", width=5, height=1, command=aboutWindow.destroy).pack(side='bottom')
 
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About", command=lambda: about())
@@ -161,9 +170,6 @@ def addNumber(number):
 
 #define addAnswer function
 def addAnswer():
-    global numberString1
-    global numberString2
-    global mode
     global result
 
     logger.info(f"Adding answer: {result}")
