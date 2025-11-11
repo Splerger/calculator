@@ -1,6 +1,6 @@
 #import modules
 import tkinter as tk
-from tkinter import Menu
+from tkinter import Menu, StringVar
 
 import os
 import sys
@@ -81,6 +81,7 @@ label.place(x=20, y=20)
 menubar = Menu(window)
 filemenu = Menu(menubar, tearoff=0)
 helpmenu = Menu(menubar, tearoff=0)
+toolmenu = Menu(menubar, tearoff=0)
 
 #define openLogFile
 def openLogFile():
@@ -117,6 +118,32 @@ def about():
 
 menubar.add_cascade(label="Help", menu=helpmenu)
 helpmenu.add_command(label="About", command=lambda: about())
+
+def hexadecimal():
+    #create window
+    hexadecimalWindow = tk.Tk()
+    hexadecimalWindow.title("Hexadecimal")
+    hexadecimalWindow.geometry("300x200")
+    hexadecimalWindow.minsize(300, 200)
+    hexadecimalWindow.maxsize(300, 200)
+    hexadecimalWindow.iconbitmap(icon_path) 
+
+    #define variable
+    number = StringVar(hexadecimalWindow)
+
+    #create gui elements
+    tk.Entry(hexadecimalWindow, width=20, textvariable=number).pack()
+    tk.Button(hexadecimalWindow, width=10, height=2, text="Calculate", command=lambda: calculateHex()).pack()
+
+    answer = tk.Label(hexadecimalWindow, text="")
+    answer.place(x=140,y=70)
+
+    #define hex number
+    def calculateHex():
+        answer.config(text=f"Hex: {hex(int(number.get()))}")
+
+menubar.add_cascade(label="Tools", menu=toolmenu)
+toolmenu.add_command(label="Hexadecimal", command=lambda: hexadecimal())
 
 #define addNumber function
 def addNumber(number):
