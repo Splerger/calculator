@@ -1,6 +1,6 @@
 #import modules
 import tkinter as tk
-from tkinter import Menu, StringVar
+from tkinter import Menu, StringVar, messagebox
 
 import os
 import sys
@@ -53,6 +53,7 @@ height = 375
 window = tk.Tk()
 window.geometry(f"{width}x{height}")
 window.minsize(width,height)
+window.maxsize(width,height)
 window.title("Calculator")
 
 #set window icon
@@ -94,13 +95,15 @@ menubar.add_cascade(label="File", menu=filemenu)
 
 #define about function
 def about():
-    aboutWindow = tk.Tk()
+    #create window
+    aboutWindow = tk.Toplevel()
     aboutWindow.title("About")
     aboutWindow.geometry("380x170")
     aboutWindow.minsize(380, 150)
     aboutWindow.maxsize(380, 150)
     aboutWindow.iconbitmap(icon_path)
 
+    #create gui elements
     Name = tk.Label(aboutWindow, text=f"Calculator V{version}", font=('Helvetica', 9, 'bold'), justify='left')
     
     Source = tk.Label(aboutWindow, text="https://github.com/splerger/Calculator", font=('Helvetica', 9, 'underline'), fg='blue', cursor='hand2', justify='left')
@@ -121,26 +124,33 @@ helpmenu.add_command(label="About", command=lambda: about())
 
 def hexadecimal():
     #create window
-    hexadecimalWindow = tk.Tk()
+    hexadecimalWindow = tk.Toplevel()
     hexadecimalWindow.title("Hexadecimal")
-    hexadecimalWindow.geometry("300x200")
-    hexadecimalWindow.minsize(300, 200)
-    hexadecimalWindow.maxsize(300, 200)
+    hexadecimalWindow.geometry("250x200")
+    hexadecimalWindow.minsize(250, 200)
+    hexadecimalWindow.maxsize(250, 200)
     hexadecimalWindow.iconbitmap(icon_path) 
 
     #define variable
     number = StringVar(hexadecimalWindow)
+    hexadecimal = StringVar(hexadecimalWindow)
 
     #create gui elements
-    tk.Entry(hexadecimalWindow, width=20, textvariable=number).pack()
+    tk.Label(hexadecimalWindow, text="Number to Hex").pack()
+    tk.Entry(hexadecimalWindow, width=20, textvariable=number).pack(pady=5)
     tk.Button(hexadecimalWindow, width=10, height=2, text="Calculate", command=lambda: calculateHex()).pack()
 
-    answer = tk.Label(hexadecimalWindow, text="")
-    answer.place(x=140,y=70)
+    tk.Label(hexadecimalWindow, text="Hex to Number").pack(pady=5 )
+    tk.Entry(hexadecimalWindow,width=20,textvariable=hexadecimal).pack(pady=5)
+    tk.Button(hexadecimalWindow, width=10, height=2, text="Calculate", command=lambda: calculateNumber()).pack()
 
-    #define hex number
+    #define calculateHex
     def calculateHex():
-        answer.config(text=f"Hex: {hex(int(number.get()))}")
+        messagebox.showinfo("Hex",f"{hex(int(number.get()))}")
+
+    #define calculateNumber
+    def calculateNumber():
+        messagebox.showinfo("Number",f"{int(hexadecimal.get(),16)}")
 
 menubar.add_cascade(label="Tools", menu=toolmenu)
 toolmenu.add_command(label="Hexadecimal", command=lambda: hexadecimal())
