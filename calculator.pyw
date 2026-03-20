@@ -36,7 +36,7 @@ for file in files:
     if os.path.getsize(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/{file}") >= 1000000:
         os.remove(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/{file}")
 
-file_handler = logging.FileHandler(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}.log")
+file_handler = logging.FileHandler(f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}-{os.getpid()}.log")
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
@@ -73,7 +73,7 @@ result = 0
 calculated = False
 mode = ""
 
-version = "1.0.2"
+version = "1.0.3"
 
 #label to display numbers
 label = tk.Label(window, text=f"{numberString1}{mode}")
@@ -86,7 +86,7 @@ toolmenu = Menu(menubar, tearoff=0)
 
 #define openLogFile
 def openLogFile():
-    subprocess.Popen(["notepad.exe", f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}.log"])
+    subprocess.Popen(["notepad.exe", f"C:/Users/{os.getenv('username')}/AppData/Local/Calculator/calculator-{today}-{os.getpid()}.log"])
 
 filemenu.add_command(label="Open Log File", command=openLogFile)
 filemenu.add_separator()
